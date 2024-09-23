@@ -79,7 +79,7 @@ function App() {
   };
 
   return (
-    <main className="bg-gray-100 min-h-screen py-10">
+    <main className="bg-gray-100 h-screen overflow-auto py-4 sm:py-10">
       <div className="container mx-auto border rounded-xl p-4 min-h-full shadow bg-white">
         {!isAdding && (
           <div className="text-end">
@@ -104,8 +104,8 @@ function App() {
               }}
               onSubmit={onSubmit}
             >
-              <div className="bg-white flex items-center gap-4 mb-2">
-                <div className="flex-1 flex items-center gap-2">
+              <div className="bg-white flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
+                <div className="flex-1 w-full flex items-center gap-2">
                   <label htmlFor="title">Title</label>
                   <input
                     id="title"

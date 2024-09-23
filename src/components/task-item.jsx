@@ -34,25 +34,28 @@ const TaskItem = ({ task, index }) => {
   };
 
   return (
-    <div className="border rounded p-4">
+    <div className="border rounded p-4 h-fit">
       {view.view_type === "list" && (
-        <div className="flex items-center justify-between -m-2 gap-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between -m-2 gap-2">
           {!isEditing ? (
             <>
-              <div className="text-lg font-semibold truncate">{task.title}</div>
-              <div className="flex items-center gap-6">
-                <div
-                  className={`${
-                    isExpired ? "" : isDue ? "text-red-600" : "text-green-600"
-                  }`}
-                >
-                  <span>
-                    <b>Due : </b>
-                  </span>{" "}
-                  <span>{dDate}</span>
-                </div>
-                <span
-                  className={`rounded border px-2 py-1 w-28 text-center
+              <div className="md:text-lg font-semibold truncate">
+                {task.title}
+              </div>
+              <div className="flex flex-col md:flex-row md:items-center gap-2 lg:gap-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div
+                    className={`${
+                      isExpired ? "" : isDue ? "text-red-600" : "text-green-600"
+                    }`}
+                  >
+                    <span>
+                      <b>Due : </b>
+                    </span>{" "}
+                    <span>{dDate}</span>
+                  </div>
+                  <span
+                    className={`rounded border px-2 py-1 w-28 text-center
                   ${
                     task.status === "To Do"
                       ? "bg-sky-200 border-sky-300"
@@ -60,28 +63,32 @@ const TaskItem = ({ task, index }) => {
                       ? "bg-amber-200 border-amber-300"
                       : "bg-green-200 border-green-300"
                   }`}
-                >
-                  {task.status}
-                </span>
-                <button
-                  className="border border-gray-400 rounded p-1"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <PencilSquareIcon className="size-5 text-gray-600" />
-                </button>
-                <button
-                  className="border border-red-300 rounded p-1"
-                  onClick={() => dispatch(deleteTask(task.id))}
-                >
-                  <TrashIcon className="size-5 text-red-400" />
-                </button>
+                  >
+                    {task.status}
+                  </span>
+                </div>
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    className="border border-gray-400 rounded p-1"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    <PencilSquareIcon className="size-5 text-gray-600" />
+                  </button>
+                  <button
+                    className="border border-red-300 rounded p-1"
+                    onClick={() => dispatch(deleteTask(task.id))}
+                  >
+                    <TrashIcon className="size-5 text-red-400" />
+                  </button>
+                </div>
               </div>
             </>
           ) : (
             <>
               <input
                 value={task.title}
-                className="flex-1 border rounded outline-0 text-lg px-2 py-1 -my-1 -ml-1"
+                className="flex-1 border rounded outline-0 md:text-lg px-2 py-1 md:-my-1 md:-ml-1"
+                placeholder="Title"
                 onChange={(event) =>
                   setEditedTask((prev) => {
                     return { ...prev, title: event.target.value };
@@ -90,107 +97,111 @@ const TaskItem = ({ task, index }) => {
                 autoFocus
                 required
               />
-              <Datepicker
-                containerClassName={"relative"}
-                inputClassName={
-                  "relative transition-all duration-300 py-1.5 pl-2 pr-10 w-40 outline-0 rounded border tracking-wide font-light placeholder-gray-400 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
-                }
-                inputId="dueDate"
-                useRange={false}
-                asSingle={true}
-                displayFormat="DD/MM/YYYY"
-                minDate={new Date()}
-                value={{
-                  startDate: editedTask.dueDate,
-                  endDate: editedTask.dueDate,
-                }}
-                onChange={(value) => {
-                  setEditedTask((prev) => {
-                    return {
-                      ...prev,
-                      dueDate: moment(value.endDate).endOf("day").format(),
-                    };
-                  });
-                }}
-                required
-              />
-              <Menu as="div" className="relative inline-block text-left">
-                <MenuButton className="inline-flex w-32 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm leading-4 font-semibold text-gray-900 border border-gray-400 hover:bg-gray-200">
-                  <span className="flex-1">{editedTask.status}</span>
-                  <ChevronDownIcon className="size-4 float-right" />
-                </MenuButton>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <Datepicker
+                  containerClassName={"relative"}
+                  inputClassName={
+                    "relative transition-all duration-300 py-1.5 pl-2 pr-10 w-full md:w-40 outline-0 rounded border tracking-wide font-light placeholder-gray-400 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                  }
+                  inputId="dueDate"
+                  useRange={false}
+                  asSingle={true}
+                  displayFormat="DD/MM/YYYY"
+                  minDate={new Date()}
+                  value={{
+                    startDate: editedTask.dueDate,
+                    endDate: editedTask.dueDate,
+                  }}
+                  onChange={(value) => {
+                    setEditedTask((prev) => {
+                      return {
+                        ...prev,
+                        dueDate: moment(value.endDate).endOf("day").format(),
+                      };
+                    });
+                  }}
+                  required
+                />
+                <Menu as="div" className="relative inline-block text-left">
+                  <MenuButton className="inline-flex w-32 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm leading-4 font-semibold text-gray-900 border border-gray-400 hover:bg-gray-200">
+                    <span className="flex-1">{editedTask.status}</span>
+                    <ChevronDownIcon className="size-4 float-right" />
+                  </MenuButton>
 
-                <MenuItems
-                  transition
-                  className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
+                    <div className="py-1">
+                      <MenuItem>
+                        <button
+                          className={`block w-full px-4 py-2 text-left text-sm ${
+                            editedTask.status === "To Do"
+                              ? "bg-gray-100 text-gray-900 font-semibold"
+                              : "text-gray-700"
+                          }`}
+                          onClick={() =>
+                            setEditedTask((prev) => {
+                              return { ...prev, status: "To Do" };
+                            })
+                          }
+                        >
+                          To Do
+                        </button>
+                      </MenuItem>
+                      <MenuItem>
+                        <button
+                          className={`block w-full px-4 py-2 text-left text-sm ${
+                            editedTask.status === "In Progress"
+                              ? "bg-gray-100 text-gray-900 font-semibold"
+                              : "text-gray-700"
+                          }`}
+                          onClick={() =>
+                            setEditedTask((prev) => {
+                              return { ...prev, status: "In Progress" };
+                            })
+                          }
+                        >
+                          In Progress
+                        </button>
+                      </MenuItem>
+                      <MenuItem>
+                        <button
+                          className={`block w-full px-4 py-2 text-left text-sm ${
+                            editedTask.status === "Done"
+                              ? "bg-gray-100 text-gray-900 font-semibold"
+                              : "text-gray-700"
+                          }`}
+                          onClick={() =>
+                            setEditedTask((prev) => {
+                              return { ...prev, status: "Done" };
+                            })
+                          }
+                        >
+                          Done
+                        </button>
+                      </MenuItem>
+                    </div>
+                  </MenuItems>
+                </Menu>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  className="border rounded px-2 py-1 flex-1"
+                  onClick={() => {
+                    setEditedTask(task);
+                    setIsEditing(false);
+                  }}
                 >
-                  <div className="py-1">
-                    <MenuItem>
-                      <button
-                        className={`block w-full px-4 py-2 text-left text-sm ${
-                          editedTask.status === "To Do"
-                            ? "bg-gray-100 text-gray-900 font-semibold"
-                            : "text-gray-700"
-                        }`}
-                        onClick={() =>
-                          setEditedTask((prev) => {
-                            return { ...prev, status: "To Do" };
-                          })
-                        }
-                      >
-                        To Do
-                      </button>
-                    </MenuItem>
-                    <MenuItem>
-                      <button
-                        className={`block w-full px-4 py-2 text-left text-sm ${
-                          editedTask.status === "In Progress"
-                            ? "bg-gray-100 text-gray-900 font-semibold"
-                            : "text-gray-700"
-                        }`}
-                        onClick={() =>
-                          setEditedTask((prev) => {
-                            return { ...prev, status: "In Progress" };
-                          })
-                        }
-                      >
-                        In Progress
-                      </button>
-                    </MenuItem>
-                    <MenuItem>
-                      <button
-                        className={`block w-full px-4 py-2 text-left text-sm ${
-                          editedTask.status === "Done"
-                            ? "bg-gray-100 text-gray-900 font-semibold"
-                            : "text-gray-700"
-                        }`}
-                        onClick={() =>
-                          setEditedTask((prev) => {
-                            return { ...prev, status: "Done" };
-                          })
-                        }
-                      >
-                        Done
-                      </button>
-                    </MenuItem>
-                  </div>
-                </MenuItems>
-              </Menu>
-              <button
-                className="border rounded px-2 py-1"
-                onClick={() => {
-                  setEditedTask(task);
-                  setIsEditing(false);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="border border-green-500 rounded px-2 py-1 bg-green-400 text-white"
-                onClick={() => onSaveEdit()}
-              >
-                Save
-              </button>
+                  Cancel
+                </button>
+                <button
+                  className="border border-green-500 rounded px-2 py-1 bg-green-400 text-white flex-1"
+                  onClick={() => onSaveEdit()}
+                >
+                  Save
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -198,10 +209,10 @@ const TaskItem = ({ task, index }) => {
       {view.view_type === "grid" &&
         (!isEditing ? (
           <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <div className="font-semibold truncate">{task.title}</div>
               <div
-                className={`rounded text-center ${
+                className={`rounded text-center min-w-fit ${
                   task.status === "To Do"
                     ? "text-sky-600"
                     : task.status === "In Progress"
@@ -244,6 +255,7 @@ const TaskItem = ({ task, index }) => {
             <input
               value={task.title}
               className="flex-1 border rounded outline-0 w-full px-2 py-1"
+              placeholder="Title"
               onChange={(event) =>
                 setEditedTask((prev) => {
                   return { ...prev, title: event.target.value };
